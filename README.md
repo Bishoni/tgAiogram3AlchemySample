@@ -17,9 +17,6 @@
 ### Структура проекта
 
 ```
-├── Dockerfile
-├── README.md
-├── alembic.ini
 ├── app
 │   ├── __init__.py
 │   ├── actions
@@ -143,6 +140,8 @@
 │   ├── __init__.py
 │   ├── add_default_jobs.py
 │   └── create_scheduler.py
+├── alembic.ini
+├── Dockerfile
 ├── docker-compose.yml
 └── requirements.txt
 ```
