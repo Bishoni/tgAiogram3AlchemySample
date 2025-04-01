@@ -1,0 +1,9 @@
+services:
+  bot:
+    build: .
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - ./app/log/logs:/usr/src/m_bot/app/log/logs
+      - ./app/extra/media:/usr/src/m_bot/app/extra/media
