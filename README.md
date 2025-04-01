@@ -264,11 +264,11 @@ class Base(AsyncAttrs, DeclarativeBase):
 Сервис-специфичные DAO наследуются от BaseDAO:
 
 ```python
-from bot.dao.base import BaseDAO
-from bot.users.models import User
+from app.main_dao.base import BaseDAO
+from app.main_dao.models import TgUser
 
-class UserDAO(BaseDAO):
-    model = User
+class UserDAO(BaseDAO[TgUser]):
+    model = TgUser
 ```
 
 Пример использования:
