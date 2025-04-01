@@ -186,8 +186,6 @@
 - **[scheduler](app/scheduler)** — модуль планировщика задач.  
   Используется для запуска периодических заданий и настройки дефолтных джобов.
 
-- **[Dockerfile](Dockerfile)** – докер-файл для развертки проекта через docker.
-
 - **[Dockerfile](Dockerfile) и [docker-compose.yml](docker-compose.yml)** – докер файлы для развертки проекта через docker. Обязательно прокидывать папки [logs](app/log/logs) и [media](app/extra/media) с хоста!
 
 ## Конфигурация
@@ -205,9 +203,9 @@
 ### Зависимости
 
 ```
-pydantic==2.10.6
+pydantic==2.10.6  # При повышении версии смотреть совместимость с aiogram
 SQLAlchemy==2.0.40
-aiogram==3.19.0
+aiogram==3.19.0  # При добавлении aiogram-dialog смотреть совместимость
 APScheduler==3.11.0
 pydantic-settings==2.8.1
 asyncpg==0.30.0
