@@ -121,41 +121,63 @@ async def animate_waiting_message(event: CallbackQuery | Message, signature: str
 
 def split_long_message(text: str, max_length: int = 4000) -> list[str]:
     """
-    Разбивает длинный текст на части, не превышающие max_length символов.
-    Сохраняет целостность строк и слов, разбивая сначала по переносу строки, затем по пробелам в ней.
+    Разбивает длинный текст на части, подходящие для отправки в Telegram,
+    сохраняя целостность HTML-тегов.
+
+    Telegram имеет ограничение на длину одного сообщения (по умолчанию 4096 символов).
+    Эта функция аккуратно делит текст по пробелам или переносам строк, при этом
+    учитывает открытые и закрытые HTML-теги, чтобы не нарушить форматирование.
 
     Args:
-        text: Исходный текст для разбивки.
-        max_length: Максимальная длина каждой части.
+        text (str): Исходный HTML-текст, который нужно разбить
+        max_length (int, optional): Максимальная длина одного сообщения. По умолчанию 4000
 
     Returns:
-        list[str]: Список частей текста.
+        list[str]: Список строк, каждая из которых не превышает `max_length` символов
+                   и содержит корректно завершённые HTML-теги.
+
     """
-    if len(text) <= max_length:
-        return [text]
+    tag_pattern = re.compile(r"(<\/?[\w]+(?:\s[^>]*)?>)")
+    parts = tag_pattern.split(text)
 
-    parts: list[str] = []
-    index = 0
-    length = len(text)
+    chunks = []
+    current = ""
+    open_tags = []
 
-    while index < length:
-        end = min(index + max_length, length)
-        segment = text[index:end]
+    def flush_current():
+        nonlocal current
+        if not current.strip():
+            return
+        closing = ''.join(f"</{tag}>" for tag in reversed(open_tags))
+        chunks.append(current + closing)
+        current = ""
 
-        # Пытается найти лучший разрыв: сначала по новой строке, затем по пробелу
-        if end < length:
-            newline_pos = segment.rfind('\n')
-            space_pos = segment.rfind(' ')
-            split_pos = newline_pos if newline_pos != -1 else space_pos
+    for part in parts:
+        if tag_pattern.fullmatch(part):
+            is_open = not part.startswith("</")
+            tag_name = re.findall(r"<\/?([\w]+)", part)[0]
 
-            if split_pos > 0:
-                end = index + split_pos + 1
+            if is_open:
+                open_tags.append(tag_name)
+            else:
+                if tag_name in open_tags[::-1]:
+                    open_tags.remove(tag_name)
+            current += part
+        else:
+            while len(current + part) > max_length:
+                remaining = max_length - len(current)
+                split_point = max(part.rfind(' ', 0, remaining), part.rfind('\n', 0, remaining))
+                if split_point == -1:
+                    split_point = remaining
 
-        part = text[index:end].rstrip()
-        parts.append(part)
-        index = end
+                current += part[:split_point]
+                flush_current()
+                current = ''.join(f"<{tag}>" for tag in open_tags)
+                part = part[split_point:]
+            current += part
 
-    return parts
+    flush_current()
+    return chunks
 
 
 async def delete_messages_from_state(state: FSMContext, event: CallbackQuery | Message) -> None:
