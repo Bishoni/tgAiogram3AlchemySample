@@ -13,10 +13,6 @@ from app.config.settings import settings
 logger = logging.getLogger(__name__)
 
 
-def log_shared_action(user, action):
-    logger.info(f'\nОбщий пользователь ID: ({user.id}); username: (@{user.username}); first_name: ({user.first_name}) сделал запрос: \n{action}')
-
-
 SQL_INJECTION_PATTERN = re.compile(r"'|--|(/\*(?:.|[\r\n])*?\*/)|\b(?:select|insert|update|delete|drop|alter|union|create|rename)\b", re.IGNORECASE)
 def sanitize_text(text: str) -> str:
     """
