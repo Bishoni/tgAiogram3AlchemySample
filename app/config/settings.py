@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     BOT_TOKEN: str = ""
     POSTGRESQL_URL: str = ""
     REDIS_URL: str = ""
+    API_V1_ENABLE_DEBUG: bool = True
 
     # Часовой пояс всего приложения и его аббревиатуры
     DEFAULT_TZ_NAME: ClassVar[str] = 'Europe/Moscow'
@@ -19,6 +20,5 @@ class Settings(BaseSettings):
 
     # Загрузка переменных из конфига (.env, рядом с ../app)
     model_config = SettingsConfigDict(env_file=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '.env')))
-
 
 settings = Settings()
