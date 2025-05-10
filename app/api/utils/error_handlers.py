@@ -21,7 +21,7 @@ async def custom_http_exception_handler(request: Request, exc: StarletteHTTPExce
                  f"Detail: {exc.detail}\n"
                  f"{traceback.format_exc()}")
 
-    envelope = ResponseEnvelope.error(path=url, message=exc.detail or "HTTP ошибка", code=exc.status_code)
+    envelope = ResponseEnvelope.error(request=request, message=exc.detail or "HTTP ошибка", http_status=exc.status_code)
     return JSONResponse(status_code=exc.status_code, content=envelope.model_dump())
 
 
@@ -41,14 +41,13 @@ async def custom_validation_exception_handler(request: Request, exc: RequestVali
                    f"Errors: {exc.errors()}\n"
                    f"{traceback.format_exc()}")
 
-    envelope = ResponseEnvelope.error(path=url, message="Ошибка валидации", code=422)
+    # todo: писать, какая именно ошибка валидации. какие неожиданные символы может в каком параметры возникли
+    envelope = ResponseEnvelope.error(request=request, message="Ошибка валидации", http_status=422)
     return JSONResponse(status_code=422, content=envelope.model_dump())
 
 
 async def custom_general_exception_handler(request: Request, exc: Exception):
-    url = str(request.url)
+    logger.critical(f"Необработанное исключение: {exc}\n{traceback.format_exc()}")
 
-    logger.critical(f"Unhandled exception: {exc}\n{traceback.format_exc()}")
-
-    envelope = ResponseEnvelope.error(path=url, message="Внутренняя ошибка сервера", code=500)
+    envelope = ResponseEnvelope.error(request=request, message="Внутренняя ошибка сервера – непредвиденная ошибка на стороне сервера", http_status=500)
     return JSONResponse(status_code=500, content=envelope.model_dump())

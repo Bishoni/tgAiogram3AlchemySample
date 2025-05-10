@@ -1,45 +1,51 @@
-from typing import Dict
+from typing import Dict, Optional
 from datetime import datetime
+
+from app.api.docs.errors_const import default_error_descriptions, default_error_messages
 from app.api.schemas.response import ResponseEnvelope
 from app.config.settings import settings
+from app.api.schemas.response import ResponseModelSuccessExample, ResponseModelErrorExample, ResponseConfig
 
 
-def common_responses(path_suffix: str = '/endpoint', response_config: Dict[str, Dict] = None) -> Dict[int, Dict]:
-    base_url = "http://ip:port/api/v1"
-    path = f"{base_url}{path_suffix}"
+def common_responses(path_suffix: str = '/endpoint',
+                     api_version: str = 'v1',
+                     response_config: Optional[ResponseConfig] = None) -> Dict[int, Dict]:
 
-    now = datetime.now(settings.DEFAULT_TZ)
-    timestamp = now.strftime("%d.%m.%Y %H:%M:%S MSK")
+    path = f"/api/{api_version}{path_suffix}"
+    timestamp = datetime.now(settings.DEFAULT_TZ).isoformat()
 
-    default_error_descriptions = {
-        # 400: "Некорректный запрос – сервер не может обработать запрос",
-        # 404: "Не найдено – указанный ресурс не существует",
-        # 409: "Конфликт – конфликт данных с текущим состоянием",
-        # 422: "Ошибка валидации – переданные данные недопустимы",
-        500: "Внутренняя ошибка сервера – непредвиденная ошибка на стороне сервера",
-    }
+    # 400, 401, 403, 404, 405, 408, 409, 410, 411, 412, 413, 414, 415, 422, 426, 429, 500, 501, 502, 503, 504, 505
+    allowed_code_errors: tuple[int] = (500,)   # Коды ошибок для каждого метода по умолчанию
 
-    responses = {}
+    responses: Dict[int, Dict] = {}
 
-    errors = (response_config or {}).get("error", {}).get("errors", {})
-    all_error_codes = set(default_error_descriptions.keys()) | set(errors.keys())
+    custom_errors: Dict[int, ResponseModelErrorExample] = {}
+    if response_config and response_config.error:
+        custom_errors = response_config.error.errors
 
-    for code in sorted(all_error_codes):
-        default_description = default_error_descriptions.get(code, f"Ошибка – {code}")
-        error = errors.get(code, {})
+    error_codes = set(custom_errors.keys()) | set(allowed_code_errors)
 
-        message = error.get("message", f"Сообщение к ошибке – {code}")
-        description = error.get("description", default_description)
+    for http_status in sorted(error_codes):
+        default_description = default_error_descriptions.get(http_status, f"HTTP статус-код: {http_status}")
+        default_message = default_error_messages.get(http_status, f"ОHTTP статус-код: {http_status}")
 
-        responses[code] = {
+        error_obj = custom_errors.get(
+            http_status,
+            ResponseModelErrorExample(
+                message=default_message,
+                description=default_description
+            )
+        )
+
+        responses[http_status] = {
             "model": ResponseEnvelope,
-            "description": description,
+            "description": error_obj.description,
             "content": {
                 "application/json": {
                     "example": {
                         "status": "error",
-                        "code": code,
-                        "message": message,
+                        "http_status": http_status,
+                        "message": error_obj.message,
                         "data": None,
                         "timestamp": timestamp,
                         "path": path
@@ -48,27 +54,25 @@ def common_responses(path_suffix: str = '/endpoint', response_config: Dict[str, 
             }
         }
 
-    success_config = (response_config or {}).get("success", {})
-    for code, cfg in success_config.items():
-        message = cfg.get("message", "Успешно")
-        description = cfg.get("description", "Успешный ответ")
-        data = cfg.get("data", {"ключ": "значение"})
+    success: Dict[int, ResponseModelSuccessExample] = {}
+    if response_config:
+        success = response_config.success
 
-        responses[code] = {
+    for http_status, cfg in success.items():
+        responses[http_status] = {
             "model": ResponseEnvelope,
-            "description": description,
+            "description": cfg.description,
             "content": {
                 "application/json": {
                     "example": {
                         "status": "success",
-                        "code": code,
-                        "message": message,
-                        "data": data,
+                        "http_status": http_status,
+                        "message": cfg.message,
+                        "data": cfg.data,
                         "timestamp": timestamp,
                         "path": path
                     }
                 }
             }
         }
-
     return responses

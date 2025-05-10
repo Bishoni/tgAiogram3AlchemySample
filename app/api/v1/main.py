@@ -11,11 +11,8 @@ from app.api.middlewares.LoggingMiddleware import LoggingMiddleware
 from app.api.v1.routes import api_router
 from app.config.settings import settings
 
-from app.api.utils.error_handlers import (
-    custom_http_exception_handler,
-    custom_validation_exception_handler,
-    custom_general_exception_handler,
-)
+from app.api.utils.error_handlers import (custom_http_exception_handler, custom_validation_exception_handler,
+                                          custom_general_exception_handler)
 
 logger = logging.getLogger(__name__)
 

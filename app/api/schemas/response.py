@@ -1,51 +1,79 @@
 from pydantic import BaseModel, Field
-from typing import Literal, Optional, Dict, Any
+from fastapi import Request
+from typing import Literal, Dict, Any, Optional, TypedDict
 from datetime import datetime
+
 from app.config.settings import settings
 
-
+# todo: добавить локальные возвраты "code"
+# todo: сделать отображение data: null в json
 class ResponseEnvelope(BaseModel):
     status: Literal["success", "error"] = Field(...,
-        description="Статус результата запроса: 'success' — если успешно, 'error' — если произошла ошибка.")
+                                                description="Статус результата запроса: 'success' — если успешно, 'error' — если произошла ошибка.")
 
-    code: int = Field(...,
-        description="HTTP статус-код, соответствующий результату запроса (например, 200, 400, 404, 500).")
+    http_status: int = Field(...,
+                      description="HTTP статус-код, соответствующий результату запроса (например, 200, 400, 404, 500).")
 
     message: str = Field(...,
-        description="Краткое человеко-читаемое сообщение о результате запроса или описании ошибки.")
+                         description="Краткое человеко-читаемое сообщение о результате запроса или описании ошибки.")
 
     data: Optional[Dict[str, Any]] = Field(None,
-        description="Полезная нагрузка ответа. Присутствует только в случае успешного выполнения запроса.")
+        description="Полезная нагрузка ответа.")
 
     timestamp: str = Field(...,
-        description="Дата и время формирования ответа на сервере, в формате 'ДД.ММ.ГГГГ ЧЧ:ММ:СС MSK'.")
+                           description="Дата и время формирования ответа на сервере, в ISO формате.")
 
     path: str = Field(...,
-        description="Полный путь запроса, приведший к данному ответу.")
+                      description="Относительный путь запроса, приведший к данному ответу.")
 
     @classmethod
     def success(cls,
+                request: Request,
                 data: Dict[str, Any],
-                path: str,
                 message: str = "Success",
-                code: int = 200) -> "ResponseEnvelope":
-        now = datetime.now(settings.DEFAULT_TZ).strftime("%d.%m.%Y %H:%M:%S MSK")
+                http_status: int = 200) -> "ResponseEnvelope":
+        now = datetime.now(settings.DEFAULT_TZ).isoformat()
         return cls(status="success",
-                   code=code,
+                   http_status=http_status,
                    message=message,
                    data=data,
                    timestamp=now,
-                   path=path)
+                   path=request.url.path)
 
     @classmethod
     def error(cls,
-              path: str,
+              request: Request,
               message: str = "Error",
-              code: int = 400) -> "ResponseEnvelope":
-        now = datetime.now(settings.DEFAULT_TZ).strftime("%d.%m.%Y %H:%M:%S MSK")
+              http_status: int = 400) -> "ResponseEnvelope":
+        now = datetime.now(settings.DEFAULT_TZ).isoformat()
         return cls(status="error",
-                   code=code,
+                   http_status=http_status,
                    message=message,
                    data=None,
                    timestamp=now,
-                   path=path)
+                   path=request.url.path)
+
+
+class ResponseModelSuccessExample(BaseModel):
+    message: str
+    description: str
+    data: dict
+
+
+class ResponseModelErrorExample(BaseModel):
+    message: str
+    description: str
+
+
+class ErrorResponseBlockExample(BaseModel):
+    errors: Dict[int, ResponseModelErrorExample]
+
+
+class ResponseConfig(BaseModel):
+    success: Dict[int, ResponseModelSuccessExample]
+    error: ErrorResponseBlockExample
+
+
+class ResponseFromTelegramLogic(TypedDict):
+    message: str
+    http_status: int
