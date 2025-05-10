@@ -9,5 +9,5 @@ query_telegram_message: str = Query(...,
                                     description="Сообщение пользователю",
                                     min_length=1,
                                     max_length=4000,
-                                    pattern=r"^[А-Яа-яA-Za-z0-9\s.,?-]+$",
+                                    pattern=r"^[А-Яа-яA-Za-z0-9\s.,-]+$",
                                     example="Пример сообщения")

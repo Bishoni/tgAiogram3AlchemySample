@@ -1,0 +1,51 @@
+from app.api.docs.Enums.http_status import HttpStatusCode
+
+default_error_descriptions = {
+    HttpStatusCode.BAD_REQUEST: "`Bad Request` — сервер не может обработать запрос из-за ошибки клиента.",
+    HttpStatusCode.UNAUTHORIZED: "`Unauthorized` — требуется аутентификация для доступа к ресурсу.",
+    HttpStatusCode.FORBIDDEN: "`Forbidden` — у клиента нет прав доступа к содержимому.",
+    HttpStatusCode.NOT_FOUND: "`Not Found` — запрашиваемый ресурс не найден на сервере.",
+    HttpStatusCode.METHOD_NOT_ALLOWED: "`Method Not Allowed` — HTTP-метод не поддерживается для этого маршрута.",
+    HttpStatusCode.REQUEST_TIMEOUT: "`Request Timeout` — сервер не дождался полного запроса от клиента.",
+    HttpStatusCode.CONFLICT: "`Conflict` — запрос конфликтует с текущим состоянием ресурса.",
+    HttpStatusCode.GONE: "`Gone` — ресурс был удалён и более недоступен.",
+    HttpStatusCode.LENGTH_REQUIRED: "`Length Required` — отсутствует обязательный заголовок Content-Length.",
+    HttpStatusCode.PRECONDITION_FAILED: "`Precondition Failed` — одно из предусловий запроса не выполнено.",
+    HttpStatusCode.PAYLOAD_TOO_LARGE: "`Payload Too Large` — тело запроса превышает допустимый размер.",
+    HttpStatusCode.URI_TOO_LONG: "`URI Too Long` — URI запроса слишком длинный для обработки сервером.",
+    HttpStatusCode.UNSUPPORTED_MEDIA_TYPE: "`Unsupported Media Type` — формат медиа не поддерживается сервером.",
+    HttpStatusCode.UNPROCESSABLE_ENTITY: "`Unprocessable Entity` — сервер не может обработать содержимое запроса.",
+    HttpStatusCode.UPGRADE_REQUIRED: "`Upgrade Required` — клиент должен перейти на другой протокол.",
+    HttpStatusCode.TOO_MANY_REQUESTS: "`Too Many Requests` — клиент превысил допустимый лимит запросов.",
+    HttpStatusCode.INTERNAL_SERVER_ERROR: "`Internal Server Error` — внутренняя ошибка сервера.",
+    HttpStatusCode.NOT_IMPLEMENTED: "`Not Implemented` — сервер не поддерживает необходимый функционал.",
+    HttpStatusCode.BAD_GATEWAY: "`Bad Gateway` — некорректный ответ от вышестоящего сервера.",
+    HttpStatusCode.SERVICE_UNAVAILABLE: "`Service Unavailable` — сервер временно не может обработать запрос.",
+    HttpStatusCode.GATEWAY_TIMEOUT: "`Gateway Timeout` — вышестоящий сервер не ответил вовремя.",
+    HttpStatusCode.HTTP_VERSION_NOT_SUPPORTED: "`HTTP Version Not Supported` — сервер не поддерживает версию протокола HTTP."
+}
+
+default_error_messages = {
+    HttpStatusCode.BAD_REQUEST: "Некорректный запрос. Проверьте параметры.",
+    HttpStatusCode.UNAUTHORIZED: "Требуется авторизация для доступа.",
+    HttpStatusCode.FORBIDDEN: "Доступ к ресурсу запрещён.",
+    HttpStatusCode.NOT_FOUND: "Ресурс не найден.",
+    HttpStatusCode.METHOD_NOT_ALLOWED: "Метод не разрешён для этого запроса.",
+    HttpStatusCode.REQUEST_TIMEOUT: "Время ожидания запроса истекло.",
+    HttpStatusCode.CONFLICT: "Конфликт с текущим состоянием ресурса.",
+    HttpStatusCode.GONE: "Ресурс был удалён и недоступен.",
+    HttpStatusCode.LENGTH_REQUIRED: "Не указан заголовок Content-Length.",
+    HttpStatusCode.PRECONDITION_FAILED: "Предусловие запроса не выполнено.",
+    HttpStatusCode.PAYLOAD_TOO_LARGE: "Размер тела запроса слишком большой.",
+    HttpStatusCode.URI_TOO_LONG: "Длина URI превышает допустимый предел.",
+    HttpStatusCode.UNSUPPORTED_MEDIA_TYPE: "Тип содержимого не поддерживается.",
+    HttpStatusCode.UNPROCESSABLE_ENTITY: "Ошибка валидации. Невозможно обработать запрос.",
+    HttpStatusCode.UPGRADE_REQUIRED: "Необходим переход на другой протокол.",
+    HttpStatusCode.TOO_MANY_REQUESTS: "Слишком много запросов. Повторите позже.",
+    HttpStatusCode.INTERNAL_SERVER_ERROR: "Внутренняя ошибка сервера.",
+    HttpStatusCode.NOT_IMPLEMENTED: "Функциональность не реализована на сервере.",
+    HttpStatusCode.BAD_GATEWAY: "Ошибка шлюза при обращении к внешнему сервису.",
+    HttpStatusCode.SERVICE_UNAVAILABLE: "Сервер перегружен или на обслуживании.",
+    HttpStatusCode.GATEWAY_TIMEOUT: "Вышестоящий сервер не ответил вовремя.",
+    HttpStatusCode.HTTP_VERSION_NOT_SUPPORTED: "Версия HTTP не поддерживается."
+}
