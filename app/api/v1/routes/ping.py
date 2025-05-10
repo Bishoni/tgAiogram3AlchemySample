@@ -1,5 +1,4 @@
 import logging
-import traceback
 
 from aiogram import Bot
 from fastapi import APIRouter, Request, Depends

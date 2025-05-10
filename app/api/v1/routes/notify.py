@@ -1,5 +1,4 @@
 import logging
-import traceback
 
 from fastapi import APIRouter, Request
 from starlette.responses import JSONResponse
