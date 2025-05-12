@@ -60,7 +60,7 @@ def setup_logging(level=logging.INFO, datefmt='%d.%m.%Y %H:%M:%S'):
     console_handler.setFormatter(console_formatter)
     console_handler.addFilter(filter_instance)
     root_logger.addHandler(console_handler)
-    root_logger.info(f"Логирование запущено в {datetime.now(tz=settings.DEFAULT_TZ).isoformat()}")
+    root_logger.info(f"Логирование запущено")
 
     # Настройка ротации логов в файл
     log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
