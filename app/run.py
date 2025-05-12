@@ -1,4 +1,6 @@
 import asyncio
+import locale
+
 from app.bot.create_bot import dp, bot, admin_router, user_router, shared_router
 from app.scheduler.create_scheduler import scheduler
 from app.scheduler.add_default_jobs import add_default_jobs

@@ -48,16 +48,15 @@ NOTIFY_RESPONSES_DOCS = ResponseConfig(
 )
 
 
-@router.get("/notify",
+@router.get("/send-message",
              response_model=ResponseEnvelope,
-             responses=common_responses(path_suffix="/notify", api_version="v1", response_config=NOTIFY_RESPONSES_DOCS),
+             responses=common_responses(path_suffix="/send-message", api_version="v1", response_config=NOTIFY_RESPONSES_DOCS),
              summary="Отправить сообщение пользователю",
              description=(
                      "Отправляет указанное текстовое сообщение пользователю Telegram по его user_id. "
                      "Используется встроенный Telegram-бот, идентификатор и токен которого настроены в конфигурации."
              ),
-             operation_id="notifyTelegramUser",
-             tags=["bot"])
+             operation_id="notifyTelegramUser")
 async def notify_user(request: Request,
                       user_id: int = query_telegram_user_id,
                       message: str = query_telegram_message) -> JSONResponse:

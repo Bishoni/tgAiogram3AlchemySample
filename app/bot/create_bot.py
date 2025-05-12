@@ -1,3 +1,5 @@
+from aiogram.fsm.storage.base import DefaultKeyBuilder
+
 from app.bot.management.admin.router import router as admin_router, register_admin_handlers
 from app.bot.management.user.router import router as user_router, register_user_handlers
 from app.bot.management.shared.router import router as shared_router, register_shared_handlers
@@ -39,8 +41,9 @@ logger = logging.getLogger(__name__)
 
 bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 # botStorage = MemoryStorage()
-botStorage = RedisStorage.from_url(settings.REDIS_URL)
-dp = Dispatcher(storage=RedisStorage.from_url(settings.REDIS_URL))
+key_builder = DefaultKeyBuilder(with_destiny=True)
+botStorage = RedisStorage.from_url(settings.REDIS_URL, key_builder=key_builder)
+dp = Dispatcher(storage=botStorage)
 
 dp.startup.register(start_bot)
 dp.shutdown.register(stop_bot)
