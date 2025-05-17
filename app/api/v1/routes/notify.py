@@ -65,7 +65,7 @@ async def notify_user(request: Request,
     if result["http_status"] == HttpStatusCode.OK:
         return_data = NotifyResponseData(
             notified=True,
-            user_id=user_id,
+            user_id=result['data']['user_id'],
             message=message
         )
         return_content = ResponseEnvelope.success(

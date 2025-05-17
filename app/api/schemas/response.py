@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from fastapi import Request
-from typing import Literal, Dict, Any, Optional, TypedDict, Annotated
+from typing import Literal, Dict, Any, Optional, Annotated, Iterator, Tuple
 from datetime import datetime
 from uuid import uuid4
 
@@ -110,7 +110,32 @@ class ResponseConfig(BaseModel):
     error: ErrorResponseBlockExample
 
 
-class ResponseFromAnotherLogic(TypedDict):
+class ResponseFromAnotherLogic(BaseModel):
     message: str
     http_status: int
     code: str
+    data: Optional[dict] = None
+
+    def __getitem__(self, key: str) -> Any:
+        return getattr(self, key)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        setattr(self, key, value)
+
+    def __contains__(self, key: str) -> bool:
+        return hasattr(self, key)
+
+    def get(self, key: str, default: Any = None) -> Any:
+        return getattr(self, key, default)
+
+    def keys(self) -> Iterator[str]:
+        return iter(self.model_fields.keys())  # ✅ modern Pydantic v2 style
+
+    def values(self) -> Iterator[Any]:
+        return (getattr(self, k) for k in self.model_fields.keys())
+
+    def items(self) -> Iterator[Tuple[str, Any]]:
+        return ((k, getattr(self, k)) for k in self.model_fields.keys())
+
+    def to_dict(self) -> dict:
+        return self.model_dump()

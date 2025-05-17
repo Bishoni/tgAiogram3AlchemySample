@@ -12,4 +12,4 @@ logger = logging.getLogger(__name__)
 @wrap_telegram_error_handler
 async def notify_user_by_bot(user_id: int, text: str) -> ResponseFromAnotherLogic:
     await bot.send_message(chat_id=user_id, text=text)
-    return ResponseFromAnotherLogic(message="Сообщение успешно отправлено", http_status=HttpStatusCode.OK, code=AppResponseCode.TG_200)
+    return ResponseFromAnotherLogic(message="Сообщение успешно отправлено", http_status=HttpStatusCode.OK, code=AppResponseCode.TG_200, data={'user_id': user_id})
