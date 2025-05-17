@@ -1,4 +1,4 @@
-from app.dto.Models.User._UserBase import _UserBase
+from app.dto.models.User._UserBase import _UserBase
 
 
 class SUserUpdate(_UserBase):

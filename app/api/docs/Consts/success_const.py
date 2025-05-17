@@ -1,4 +1,4 @@
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.enums.http_status import HttpStatusCode
 
 SUCCESS_MESSAGES = {
     HttpStatusCode.OK: "Запрос выполнен успешно.",

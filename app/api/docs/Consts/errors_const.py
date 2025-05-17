@@ -1,4 +1,4 @@
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.enums.http_status import HttpStatusCode
 
 default_error_descriptions = {
     HttpStatusCode.BAD_REQUEST: "`Bad Request` — сервер не может обработать запрос из-за ошибки клиента.",

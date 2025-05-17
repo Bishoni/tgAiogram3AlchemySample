@@ -2,10 +2,10 @@ from typing import Dict, Optional
 from datetime import datetime
 from uuid import uuid4
 
-from app.api.docs.Consts.errors_const import default_error_descriptions, default_error_messages
-from app.api.docs.Consts.success_const import SUCCESS_MESSAGES, SUCCESS_DESCRIPTIONS
-from app.api.docs.Enums.http_human_status import HttpHumanStatusCode
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.consts.errors_const import default_error_descriptions, default_error_messages
+from app.api.docs.consts.success_const import SUCCESS_MESSAGES, SUCCESS_DESCRIPTIONS
+from app.api.docs.enums.http_human_status import HttpHumanStatusCode
+from app.api.docs.enums.http_status import HttpStatusCode
 from app.api.schemas.response import (
     ResponseEnvelope,
     MetaBlockExample,

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from app.api.docs.Consts.telegram_response_data import TELEGRAM_API_ERROR_MESSAGES
+from app.api.docs.consts.telegram_response_data import TELEGRAM_API_ERROR_MESSAGES
 
 
 class AppResponseCode(str, Enum):

@@ -6,8 +6,8 @@ from typing import Callable, Awaitable, ParamSpec, TypeVar
 from sqlalchemy.exc import SQLAlchemyError, DBAPIError, OperationalError
 
 from app.api.schemas.response import ResponseFromAnotherLogic
-from app.api.docs.Enums.http_status import HttpStatusCode
-from app.api.docs.Enums.app_response_codes import AppResponseCode
+from app.api.docs.enums.http_status import HttpStatusCode
+from app.api.docs.enums.app_response_codes import AppResponseCode
 
 logger = logging.getLogger(__name__)
 

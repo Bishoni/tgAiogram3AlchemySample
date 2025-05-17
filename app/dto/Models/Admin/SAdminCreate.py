@@ -1,4 +1,4 @@
-from app.dto.Models.Admin._AdminBase import _AdminBase
+from app.dto.models.Admin._AdminBase import _AdminBase
 
 
 class SAdminCreate(_AdminBase):

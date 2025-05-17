@@ -4,10 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import logging
 
 from app.bot.management.user.services.start.keyboards.inline import inline_main_start
-from app.dto.Models.User.SUser import SUser
-from app.dto.Models.User.SUserCreate import SUserCreate
-from app.dto.Models.Admin.SAdminCreate import SAdminCreate
-from app.dto.Models.User.SUserUpdate import SUserUpdate
+from app.dto.models.User.SUser import SUser
+from app.dto.models.User.SUserCreate import SUserCreate
+from app.dto.models.Admin.SAdminCreate import SAdminCreate
+from app.dto.models.User.SUserUpdate import SUserUpdate
 from app.bot.management.shared.dao.dao import UserDAO, AdminDAO
 
 

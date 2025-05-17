@@ -7,7 +7,7 @@ import traceback
 
 from sqlalchemy.exc import SQLAlchemyError, DBAPIError, OperationalError
 
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.enums.http_status import HttpStatusCode
 
 logger = logging.getLogger(__name__)
 

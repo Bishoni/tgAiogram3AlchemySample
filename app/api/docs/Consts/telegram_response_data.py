@@ -1,4 +1,4 @@
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.enums.http_status import HttpStatusCode
 
 default_start = "Telegram Bot API"
 

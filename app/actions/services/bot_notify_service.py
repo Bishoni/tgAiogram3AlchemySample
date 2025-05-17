@@ -1,8 +1,8 @@
 import logging
 
 from app.actions.shared.wraps.wrap_telegram_error_handler import wrap_telegram_error_handler
-from app.api.docs.Enums.app_response_codes import AppResponseCode
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.enums.app_response_codes import AppResponseCode
+from app.api.docs.enums.http_status import HttpStatusCode
 from app.api.schemas.response import ResponseFromAnotherLogic
 from app.bot.create_bot import bot
 

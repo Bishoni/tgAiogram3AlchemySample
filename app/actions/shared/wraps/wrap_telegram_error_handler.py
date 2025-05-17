@@ -9,9 +9,9 @@ from aiogram.exceptions import (
     TelegramConflictError, TelegramEntityTooLarge, RestartingTelegram, TelegramNetworkError
 )
 
-from app.api.docs.Consts.telegram_response_data import TELEGRAM_API_ERROR_MESSAGES
-from app.api.docs.Enums.app_response_codes import AppResponseCode
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.consts.telegram_response_data import TELEGRAM_API_ERROR_MESSAGES
+from app.api.docs.enums.app_response_codes import AppResponseCode
+from app.api.docs.enums.http_status import HttpStatusCode
 from app.api.schemas.response import ResponseFromAnotherLogic
 
 logger = logging.getLogger(__name__)

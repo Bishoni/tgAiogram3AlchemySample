@@ -1,7 +1,7 @@
-from app.api.docs.Consts.telegram_response_data import TELEGRAM_API_ERROR_MESSAGES, TELEGRAM_API_ERROR_DESCRIPTIONS
-from app.api.docs.Enums.app_response_codes import AppResponseCode
-from app.api.docs.Enums.http_human_status import HttpHumanStatusCode
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.consts.telegram_response_data import TELEGRAM_API_ERROR_MESSAGES, TELEGRAM_API_ERROR_DESCRIPTIONS
+from app.api.docs.enums.app_response_codes import AppResponseCode
+from app.api.docs.enums.http_human_status import HttpHumanStatusCode
+from app.api.docs.enums.http_status import HttpStatusCode
 from app.api.schemas.response import ResponseModelErrorExample, MetaBlockExample
 
 

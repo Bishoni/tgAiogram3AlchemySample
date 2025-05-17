@@ -4,8 +4,8 @@ from fastapi import APIRouter, Request
 from starlette.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from app.api.docs.Consts.default_telegram_errors import TELEGRAM_API_ERROR_RESPONSES
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.consts.default_telegram_errors import TELEGRAM_API_ERROR_RESPONSES
+from app.api.docs.enums.http_status import HttpStatusCode
 from app.api.schemas.requests import query_telegram_user_id, query_telegram_message
 from app.api.schemas.response import ResponseEnvelope, ResponseFromAnotherLogic, MetaBlockExample
 from app.api.docs.common_responses import common_responses

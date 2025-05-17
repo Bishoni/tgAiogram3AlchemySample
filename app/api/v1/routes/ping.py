@@ -8,10 +8,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 
 from app.api.deps import get_session_without_commit, get_bot
-from app.api.docs.Consts.default_telegram_errors import TELEGRAM_API_ERROR_RESPONSES
-from app.api.docs.Enums.app_response_codes import AppResponseCode
-from app.api.docs.Enums.http_human_status import HttpHumanStatusCode
-from app.api.docs.Enums.http_status import HttpStatusCode
+from app.api.docs.consts.default_telegram_errors import TELEGRAM_API_ERROR_RESPONSES
+from app.api.docs.enums.app_response_codes import AppResponseCode
+from app.api.docs.enums.http_human_status import HttpHumanStatusCode
+from app.api.docs.enums.http_status import HttpStatusCode
 from app.api.schemas.response import ResponseEnvelope, MetaBlockExample
 from app.api.docs.common_responses import common_responses
 from app.api.schemas.response import (ResponseModelSuccessExample, ErrorResponseBlockExample,
