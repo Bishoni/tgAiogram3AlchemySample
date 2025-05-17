@@ -3,7 +3,7 @@ from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 import logging
 
-from app.bot.management.user.services.start.keyboards.inline import inline_success_click
+from app.bot.management.user.services.start.keyboards.inline import inline_main_start
 from app.dto.Models.User.SUser import SUser
 from app.dto.Models.User.SUserCreate import SUserCreate
 from app.dto.Models.Admin.SAdminCreate import SAdminCreate
@@ -53,5 +53,5 @@ async def handle_start_command(message: Message, session: AsyncSession, state: F
         )
         await user_dao.update(filters=SUser(telegram_id=user_id), values=user_update)
 
-    await message.answer(MSG_TXT, reply_markup=inline_success_click())
+    await message.answer(MSG_TXT, reply_markup=inline_main_start())
     await message.delete()

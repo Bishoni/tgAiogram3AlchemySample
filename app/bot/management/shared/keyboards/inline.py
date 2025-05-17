@@ -93,77 +93,87 @@ def inline_close_message():
     inline_kb_list = [
         [InlineKeyboardButton(text='Назад', callback_data='close_message')],
     ]
-    return InlineKeyboardMarkup(inline_keyboard=inline_kb_list )
+    return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
 
-def inline_calendar_keyboard(
-    year: int,
-    month: int,
-    selected_date: date | None = None,
-    available_days_from_today: int = 15,
-    show_disabled: bool = False,
-    callback_prefix: str = "calendar_"
-) -> InlineKeyboardMarkup:
+def inline_calendar_keyboard(calendar_year: int,
+                             calendar_month: int,
+                             selected_date: date | None = None,
+                             available_days_from_reference_date: int = 3,
+                             available_days_before_reference_date: int = 1,
+                             show_disabled: bool = False,
+                             callback_prefix: str = "calendar_",
+                             callback_suffix: str = '',
+                             first_date: date | None = None) -> InlineKeyboardMarkup:
     """
-    Создаёт inline-календарь с ограничением по дате и управлением пагинацией.
+    Создаёт inline-календарь с возможностью перехода назад и вперёд
+    от заданной даты (или текущей) на заданное число дней.
     """
-    # today = date(2025, 5, 25)
-    today = datetime.now(tz=settings.DEFAULT_TZ).date()
 
+    if isinstance(first_date, datetime):
+        first_date = first_date.date()
+    if isinstance(selected_date, datetime):
+        selected_date = selected_date.date()
+    if isinstance(selected_date, str):
+        selected_date = date.fromisoformat(selected_date)
+
+    reference_date = first_date or datetime.now(tz=settings.DEFAULT_TZ).date()
     if selected_date is None:
-        selected_date = today
+        selected_date = reference_date
 
-    last_available = today + timedelta(days=available_days_from_today)
+    first_available = reference_date - timedelta(days=available_days_before_reference_date)
+    last_available = reference_date + timedelta(days=available_days_from_reference_date)
 
     weekday = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
     keyboard: list[list[InlineKeyboardButton]] = []
 
-    # Название месяца
     months_nominative = [
         "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
         "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
     ]
-    month_name = f"{months_nominative[month - 1]} {year}"
+    month_name = f"{months_nominative[calendar_month - 1]} {calendar_year}"
 
     # Пагинация
-    has_next = (year, month) < (last_available.year, last_available.month)
-    has_prev = (year, month) > (today.year, today.month)
+    has_prev = (calendar_year, calendar_month) > (first_available.year, first_available.month)
+    has_next = (calendar_year, calendar_month) < (last_available.year, last_available.month)
 
     pagination_row = []
     if has_prev:
-        pagination_row.append(InlineKeyboardButton(text="<<", callback_data=f"{callback_prefix}prev_{year}_{month}"))
+        pagination_row.append(InlineKeyboardButton(
+            text="<<",
+            callback_data=f"{callback_prefix}prev_{calendar_year}_{calendar_month}{callback_suffix}"
+        ))
     if has_next:
-        pagination_row.append(InlineKeyboardButton(text=">>", callback_data=f"{callback_prefix}next_{year}_{month}"))
+        pagination_row.append(InlineKeyboardButton(
+            text=">>",
+            callback_data=f"{callback_prefix}next_{calendar_year}_{calendar_month}{callback_suffix}"
+        ))
     if pagination_row:
         keyboard.append(pagination_row)
 
     keyboard.append([InlineKeyboardButton(text=month_name, callback_data="noop")])
-
-    # Заголовки дней недели
     keyboard.append([InlineKeyboardButton(text=day, callback_data="noop") for day in weekday])
 
-    # Дни месяца
-    first_day = date(year, month, 1)
-    start_weekday = first_day.weekday()  # Пн=0
-    total_days = monthrange(year, month)[1]
+    first_day = date(calendar_year, calendar_month, 1)
+    start_weekday = first_day.weekday()
+    total_days = monthrange(calendar_year, calendar_month)[1]
 
     row: list[InlineKeyboardButton] = []
 
-    # Пустые ячейки до начала месяца
     for _ in range(start_weekday):
         row.append(InlineKeyboardButton(text=" ", callback_data="noop"))
 
     for day in range(1, total_days + 1):
-        current = date(year, month, day)
+        current = date(calendar_year, calendar_month, day)
         is_selected = selected_date == current
 
-        if current < today or current > last_available:
-            btn = InlineKeyboardButton(text="·" if show_disabled else " ", callback_data="noop")
+        if current < first_available or current > last_available:
+            btn = InlineKeyboardButton(text=" ", callback_data="noop")
         else:
             text = f"[ {day} ]" if is_selected else str(day)
             btn = InlineKeyboardButton(
                 text=text,
-                callback_data=f"{callback_prefix}day_{year}_{month}_{day}"
+                callback_data=f"{callback_prefix}day_{calendar_year}_{calendar_month}_{day}{callback_suffix}"
             )
         row.append(btn)
 
@@ -172,22 +182,22 @@ def inline_calendar_keyboard(
                 keyboard.append(row)
             row = []
 
-    # Последняя строка
     if row:
         while len(row) < 7:
             row.append(InlineKeyboardButton(text=" ", callback_data="noop"))
         if show_disabled or any(b.text.strip().isdigit() or "[" in b.text for b in row):
             keyboard.append(row)
 
-    # Кнопка подтверждения
     if selected_date:
         keyboard.append([
-            InlineKeyboardButton(text="Подтвердить выбор даты", callback_data=f"{callback_prefix}confirm")
+            InlineKeyboardButton(
+                text="Подтвердить выбор даты",
+                callback_data=f"{callback_prefix}confirm{callback_suffix}"
+            )
         ])
 
-    # Кнопка отмены
     keyboard.append([
-        InlineKeyboardButton(text="Отмена", callback_data=f"{callback_prefix}cancel")
+        InlineKeyboardButton(text="Отмена", callback_data=f"{callback_prefix}cancel{callback_suffix}")
     ])
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
